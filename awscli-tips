@@ -1,0 +1,2 @@
+Get list of subnets and subnetIDs
+aws ec2 describe-subnets --filters Name=tag:aws:cloudformation:stack-name,Values=STACKNAME --region REGION --profile PROFILE | egrep 'SubnetPub|CidrBlock"|SubnetId'
