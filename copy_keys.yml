@@ -1,0 +1,13 @@
+- hosts: 
+    ecs_*
+    cass*
+    analyt*
+    solr*
+    core*
+    redis*
+    els*
+  tasks:
+  - name: Ansible copy file to remote server
+    copy:
+      src: ~/ssh_keys/prod_authorized_keys
+      dest: ~/.ssh/authorized_keys
