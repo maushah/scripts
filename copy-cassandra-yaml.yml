@@ -1,0 +1,8 @@
+- hosts:
+    - cassandra*
+    - solr*
+    - analytic*
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - copy: src=cassandra.yaml dest=/opt/dse-4.8.9/resources/cassandra/conf/cassandra.yaml owner=root group=root mode=0644

@@ -1,0 +1,8 @@
+- hosts:
+    - cassandra_node_*
+    - analytic_node_*
+    - solr_node_*
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - unarchive: src=/opt/dse-4.8.9-bin.tar.gz dest=/opt/ remote_src=yes copy=no

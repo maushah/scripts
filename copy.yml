@@ -1,0 +1,8 @@
+- hosts:
+    - cassandra_node_*
+    - analytic_node_*
+    - solr_node_*
+  user: ubuntu
+  sudo: yes
+  tasks:
+    - copy: src=authorized_keys dest=/home/ubuntu/.ssh/authorized_keys owner=ubuntu group=ubuntu mode=0600
