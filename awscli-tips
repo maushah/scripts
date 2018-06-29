@@ -1,2 +1,37 @@
 #Get list of subnets and subnetIDs
 aws ec2 describe-subnets --filters Name=tag:aws:cloudformation:stack-name,Values=STACKNAME --region REGION --profile PROFILE | egrep 'SubnetPub|CidrBlock"|SubnetId'
+
+#create ELB
+aws elb create-load-balancer-policy --region us-east-1 --profile dev --load-balancer-name Syslog --policy-name SSLNeg-policy --policy-type-name SSLNegotiationPolicyType --policy-attributes $(for attr in $(aws elb describe-load-balancer-policies --region us-east-1 --profile dev --load-balancer-name LBCoreOS-CVTG0Q0L28M1 --policy-names ELBSecurityPolicy-2016-08 --output text | awk '{if ($3 == "true") print $2}' | grep -v "Protocol-TLSv1$"); do echo -n "AttributeName=$attr,AttributeValue=true "; done)
+
+#Cloudformation
+aws cloudformation create-stack --stack-name mshah-test --region us-west-2 --profile dev --template-url https://s3.amazonaws.com/dev/mshah-test/master.yaml --capabilities CAPABILITY_IAM
+
+#EC2
+aws ec2 describe-instances --filter "Name=tag:role,Values=kafka" --query "Reservations[].Instances[].PrivateIpAddress" --output json --region us-east-1 --profile prod 
+
+# Secondary ENI
+https://github.com/camil-sumodhee/aws-user-data-ec2-attach-eni
+
+# Monitoring
+https://www.howtoforge.com/tutorial/how-to-monitor-disk-space-with-cloudwatch/
+http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/mon-scripts.html
+
+# Terraform
+https://github.com/terraform-providers/terraform-provider-aws/issues/632
+https://groups.google.com/forum/#!topic/terraform-tool/-MUElwmCQno
+https://www.stratoscale.com/blog/it-leadership/choosing-best-tool-infrastructure-management-ansible-terraform/
+
+# Terraform commands
+## Terraform for existing stack:
+
+terraform init
+terraform get
+terraform plan -var-file=/kafka-zk/terraform.values -state=/kafka-zk/terraform.state
+terraform apply -var-file=/kafka-zk/terraform.values -state=/kafka-zk/terraform.state -auto-approve
+terraform destroy -var-file=/kafka-zk/terraform.values -state=/kafka-zk/terraform.state -force
+
+# Kafka broker
+echo dump | nc 127.0.0.1 2181 |grep brokers | cut -d/ -f 4 | sort -n | grep -n . |grep -v -m1 '\([0-9]\+\):\1' |cut -d: -f1
+2
+
