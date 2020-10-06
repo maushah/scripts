@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -ex
 
+
+
+# environment = namespace, region is aws region, file is got using below command
+# kubectl get ing -n $namespace |grep control  | awk '{ print $1 }' > $namespace.txt
 environment=$1
 region=$2
 file=$3
